@@ -6,6 +6,7 @@ import LogoutButton from '../components/LogoutButton';
 import GalleristProfileButton from '../styled-components/gallerist/route-buttons/ProfileButton';
 import GalleristCardList from '../styled-components/gallerist/lists/GalleristCardList';
 import GalleristWipsButton from '../styled-components/gallerist/route-buttons/WipsButton';
+import {Box, Image, Badge} from '@chakra-ui/react';
 
 function GalleristWip() {
   type wipType = {
@@ -35,33 +36,35 @@ function GalleristWip() {
       });
   }, [title]);
 
-  // console.log(wip);
-  // wip_title: {type: String, required: true},
-  // wip_cards: [cardSchema],
-  // update_request: String,
-  // update_request_date: String,
-
   const handleClick = () => {
     // methods.updateRequest(wip._id, 'true');
   };
 
   return (
-    <div>
-      <GalleristProfileButton />
-      <GalleristWipsButton />
-      <LogoutButton />
-      {wip.wip_cards ? (
-        <GalleristCardList cards={wip.wip_cards} wip={wip}></GalleristCardList>
-      ) : null}
-      {wip.update_request === 'false' ? (
-        <Button backgroundColor='#33e' mr={2} onClick={handleClick}>
-          {' '}
-          Request Update{' '}
-        </Button>
-      ) : (
-        <Text> You have requested an update</Text>
-      )}
-    </div>
+    <Box
+    w='400px'
+    rounded='20px'
+    overflow='hidden'
+    boxShadow='sm'
+    bg='gray.200'>
+
+    </Box>
+    // <div>
+    //   <GalleristProfileButton />
+    //   <GalleristWipsButton />
+    //   <LogoutButton />
+    //   {wip.wip_cards ? (
+    //     <GalleristCardList cards={wip.wip_cards} wip={wip}></GalleristCardList>
+    //   ) : null}
+    //   {wip.update_request === 'false' ? (
+    //     <Button backgroundColor='#33e' mr={2} onClick={handleClick}>
+    //       {' '}
+    //       Request Update{' '}
+    //     </Button>
+    //   ) : (
+    //     <Text> You have requested an update</Text>
+    //   )}
+    // </div>
   );
 }
 
