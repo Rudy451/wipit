@@ -1,39 +1,39 @@
-require('dotenv').config({ path: `${__dirname}/../.env` })
-import express from 'express'
-// import session from 'express-session';
-import cors from 'cors'
-import db from './models/index'
+require('dotenv').config({ path: `${__dirname}/../.env` });
+import express from 'express';
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import cors from 'cors';
+import db from './models/index';
+import { v4 as uuidv4 } from 'uuid';
 
-const router = require('./router')
+const router = require('./router');
 
-const app = express()
-const port = 3456
+const app = express();
+const port = 3456;
 
-// app.use(session({
-//   secret: process.env.SECRET as string,
-//   cookie: {
-//     httpOnly: true,
-//     secure: false
-//   }
-// }));
-app.use(cors())
-app.use(express.json()) //body parser
-app.use(router)
+const oneDay = 1000 * 60 * 60 * 24;
 
-app.get('/', (req: express.Request, res: express.Response) => {
-  try {
-    res.send('server is connected!')
-  } catch {
-    res.send('server failed to connect')
-    res.status(404)
-  }
-})
+app.use(cookieParser());
+app.use(session({
+  genid: (req) => uuidv4(),
+  secret: process.env.SECRET as string,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    secure: false,
+    maxAge: oneDay
+  },
+  resave: false
+}));
+app.use(cors());
+app.use(express.json());
+app.use(router);
 
 async function bootstrap () {
-  await db.sequelize.sync()
+  await db.sequelize.sync();
   app.listen(port, () => {
-    console.log(`I'm listening on port ${port}`)
+    console.log(`I'm listening on port ${port}`);
   })
 }
 
-bootstrap()
+bootstrap();
