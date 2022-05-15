@@ -1,7 +1,7 @@
-import express from "express";
+import express from 'express'
 
-const router = express.Router();
-const methods = require("./controllers");
+const router = express.Router()
+const methods = require('./controllers')
 
 router.post("/register", methods.registerUser);
 router.post("/login", methods.loginUser);
@@ -14,4 +14,4 @@ router.post("/followers", methods.getFollowers);
 router.post("/followees", methods.getFollowees);
 router.get("/wipcollections", methods.getWipCollection);
 
-module.exports = router;
+module.exports = router
