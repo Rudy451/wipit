@@ -4,6 +4,7 @@ const methods = {
     const result = await fetch("http://localhost:3456/register", {
       method: "POST",
       headers: { "Content-type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({
         name: newUser.name,
         email: newUser.email,
@@ -18,6 +19,7 @@ const methods = {
     const result = await fetch("http://localhost:3456/login", {
       method: "POST",
       headers: { "Content-type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({
         email: user.email,
         password: user.password,

@@ -21,26 +21,31 @@ function GalleristProfile(): JSX.Element {
   const mockImages = [ballerina, nature,tiger, art2, fish, art3];
 
  interface followeesInterFace {
-  followId: String;
-  profileId:String;
-  followerId: String;
-  createdAt: String;
-  updatedAt: String;
-  artistWips?: any;
-  profile: {
-      profileId: String;
-      name: String;
-      type: String;
-      createdAt: String;
-      updatedAt: String;
-  };
-}
-    const [followees, setFollowees] = useState<[followeesInterFace] | []>([]);
-    const { user } = useContext(UserContext);
+    followId: String;
+    profileId:String;
+    followerId: String;
+    createdAt: String;
+    updatedAt: String;
+    artistWips?: any;
+    profile: {
+        profileId: String;
+        name: String;
+        type: String;
+        createdAt: String;
+        updatedAt: String;
+    };
+  }
 
-  useEffect(() => {
-    methods.getFollowees(user.profileId).then((response) => {
-      console.log(response)
+  const [followees, setFollowees] = useState<[followeesInterFace] | []>([]);
+  const { user, setUser } = useContext(UserContext);
+  let myUser = {"profileId": true, "email": true, "password": true, "name": true};
+
+  const apiCall = async () => {
+    if(user == undefined) {
+      myUser = await methods.getUser({"email": true, "password": true});
+      setUser(myUser)
+    }
+    methods.getFollowees(user == undefined ? myUser.profileId : user.profileId).then((response) => {
       response.forEach(async(artist: any)=> artist.artistWips = await methods.getWipCollectionByUser(artist.profile.profileId));
       let noDuplicates: any = uniqBy(response,'profileId');
       setFollowees(noDuplicates);
@@ -50,7 +55,11 @@ function GalleristProfile(): JSX.Element {
     }).catch((error) => {
       console.log(error);
       console.log('Error occured.');
-      });
+    });
+  };
+
+  useEffect(() => {
+    apiCall();
   }, []);
 
   return (

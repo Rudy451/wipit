@@ -1,7 +1,6 @@
-
 import express from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import bcrypt from 'bcrypt';
+import bcrypt, { genSaltSync } from 'bcrypt';
 import assert from 'assert';
 import { Sequelize } from '@sequelize/core';
 
@@ -10,14 +9,18 @@ import db from './models/index';
 exports.registerUser = async (req: express.Request, res: express.Response) => {
   try {
     const { name, email, password, type } = req.body;
+    assert(email.length > 0);
     const myUser = await db.Login.findOne({ where: { email: email } });
     assert(myUser === null);
+    assert(name.length() > 0 && name.length < 30);
+    assert(password.length() > 0 && password.length < 50);
+    assert(type == "artist" || type == "gallerist");
     const saltRounds = 12;
     bcrypt.genSalt(saltRounds, (err, salt) => {
       if (err) err;
       bcrypt.hash(password, salt, async () => {
-        const userId = uuidv4();
-        const profileId = uuidv4();
+        const userId:any = uuidv4();
+        const profileId:any = uuidv4();
         await db.Login.create({
           loginId: userId,
           email: email,
@@ -28,9 +31,17 @@ exports.registerUser = async (req: express.Request, res: express.Response) => {
             name: name,
             type: type
           }).then(result => result.profileId),
-          sessionId: req.sessionID
         });
-        res.send({ profileId: profileId, name: name, email: email, type: type });
+        req.session.profileId = profileId;
+        req.session.email = email;
+        req.session.name = name;
+        req.session.type = type;
+        res.send({
+          'profileId': req.session.profileId,
+          'email': req.session.email,
+          'name': req.session.name,
+          'type': req.session.type
+        });
         res.status(200);
       })
     })
@@ -44,32 +55,37 @@ exports.registerUser = async (req: express.Request, res: express.Response) => {
 
 exports.loginUser = async (req: express.Request, res: express.Response) => {
   try {
-    const { email, password } = req.body;
-    const result = await db.Login.findOne({
-      where: { email: email, password: password },
-      include: [
-        {
-          model: db.Profile,
-          attributes: []
-        }
-      ],
-      attributes: [
-        'profileId',
-        'email',
-        [Sequelize.col('Profile.name'), 'name'],
-        [Sequelize.col('Profile.type'), 'type']
-      ]
+    if(req.session.email == undefined) {
+      const { email, password } = req.body;
+      const result:any = await db.Login.findOne({
+        where: { email: email},
+        include: [
+          {
+            model: db.Profile,
+            attributes: []
+          }
+        ],
+        attributes: [
+          'profileId',
+          'email',
+          'password',
+          [Sequelize.col('Profile.name'), 'name'],
+          [Sequelize.col('Profile.type'), 'type']
+        ]
+      });
+      assert(result !== null);
+      assert(bcrypt.compareSync(password, result["password"]));
+      req.session.profileId = result.dataValues["profileId"];
+      req.session.email = email;
+      req.session.name = result.dataValues["name"];
+      req.session.type = result.dataValues["type"];
+    }
+    res.send({
+      'profileId': req.session.profileId,
+      'email': req.session.email,
+      'name': req.session.name,
+      'type': req.session.type
     });
-    assert(result !== null);
-    db.Login.update(
-      {
-        sessionId: req.sessionID
-      },
-      {
-        where: {profileId: result.profileId}
-      }
-    );
-    res.send(result);
     res.status(200);
   } catch (e) {
     console.log(e);
@@ -81,14 +97,11 @@ exports.loginUser = async (req: express.Request, res: express.Response) => {
 
 exports.logoutUser = async (req: express.Request, res: express.Response) => {
   try {
-    db.Login.update(
-      {
-        sessionId: '00000000-0000-0000-0000-000000000000'
-      },
-      {
-        where: {profileId: req.body.profileId}
+    req.session.destroy((err:any) => {
+      if(err){
+        console.log("Error: ", err);
       }
-    );
+    });
     res.send(true);
     res.status(200);
     } catch (e) {

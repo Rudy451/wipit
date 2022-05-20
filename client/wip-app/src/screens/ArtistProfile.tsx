@@ -23,20 +23,26 @@ const nftLady = require("../assets/nftlady.jpeg");
 const duck = require("../assets/duck.jpeg");
 
 function ArtistProfile(): JSX.Element {
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const { setWipCollection } = useContext(WipCollectionContext);
   const [followers, setFollowers] = useState(0);
 
+  let myUser = {"profileId": true, "email": true, "password": true, "name": true};
+
   const apiCall = async () => {
+    if(user == undefined) {
+      myUser = await methods.getUser({"email": true, "password": true});
+      setUser(myUser)
+    }
     await methods
-      .getWipCollectionByUser(user.profileId)
+      .getWipCollectionByUser(user == undefined ? myUser.profileId : user.profileId)
       .then((response) => {
         setWipCollection(response);
       })
       .catch((error) => {
         console.log(error);
       });
-    await methods.getFollowers(user.profileId).then((response) => {
+    await methods.getFollowers(user == undefined ? myUser.profileId : user.profileId).then((response) => {
       console.log(response);
       setFollowers(response.length);
     });

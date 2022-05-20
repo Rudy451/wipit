@@ -43,8 +43,8 @@ function Login({ userType }: loginProps): JSX.Element {
     console.log(user, "this is the user state");
 
     const userInfo = await methods.getUser(userLogin);
+    console.log(userInfo);
     let path = "";
-    console.log("user created: ", userInfo);
     if (userInfo) {
       setUser(userInfo);
       path = path.concat(
@@ -52,7 +52,6 @@ function Login({ userType }: loginProps): JSX.Element {
           ? `/a/${userInfo.profileId}`
           : `/g/${userInfo.profileId}`
       );
-      console.log(path);
       navigate(path);
     } else {
       alert("Try again with a different email!");

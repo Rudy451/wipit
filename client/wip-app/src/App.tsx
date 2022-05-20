@@ -9,8 +9,9 @@ import { ChakraProvider } from "@chakra-ui/react";
 import Register from "./screens/Register";
 import Home from "./screens/Home";
 import { useMemo, useState } from "react";
-import { WipCollectionContext, UserContext, WipContext } from "./userContext";
+import { UserContext, WipCollectionContext, WipContext } from "./userContext";
 import Collection from "./screens/Collection";
+import methods from './services';
 
 function App(): JSX.Element {
   const [user, setUser] = useState(null);

@@ -6,7 +6,6 @@ interface LoginInterface {
   email: string;
   password: string;
   profileId: string;
-  sessionId: string;
 }
 
 class Login extends Model<LoginInterface> implements LoginInterface {
@@ -14,7 +13,6 @@ class Login extends Model<LoginInterface> implements LoginInterface {
   public email!: string;
   public password!: string;
   public profileId!: string;
-  public sessionId!: string;
 }
 
 Login.init({
@@ -33,10 +31,6 @@ Login.init({
     },
     profileId: {
       type: DataTypes.UUID,
-    },
-    sessionId: {
-      type: DataTypes.UUID,
-      allowNull: true
     }
   },
   {
