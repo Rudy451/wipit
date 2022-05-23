@@ -5,8 +5,12 @@
   "main": "index.ts",
   "scripts": {
     "start": "nodemon index.ts",
-    "test": "cross-env NODE_ENV=test jest --detectOpenHandles --testTIMEOUT=10000"
+    "postinstall": "tsc",
+    "test": "cross-env NODE_ENV=test jest --detectOpenHandles --testTIMEOUT=10000",
+    "watch-ts": "tsc -w",
+    "deploy": "git add -A && git commit -m Heroku && git push heroku master"
   },
+  "engines": {"node": "16.13.0"},
   "jest": {
     "testEnvironment": "node",
     "coveragePathIgnorePatterns": [
