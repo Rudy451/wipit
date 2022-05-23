@@ -216,5 +216,3 @@ describe("Separate API Testing for Followees", () => {
                           });
   });
 });
-
-export {db};
