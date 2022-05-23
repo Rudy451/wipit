@@ -99,7 +99,8 @@ exports.logoutUser = async (req: express.Request, res: express.Response) => {
   try {
     req.session.destroy((err:any) => {
       if(err){
-        console.log("Error: ", err);
+        // Comment out during testing....
+        //console.log("Error: ", err);
       }
     });
     res.send(true);
@@ -112,18 +113,36 @@ exports.logoutUser = async (req: express.Request, res: express.Response) => {
     }
 }
 
-exports.addWipCollection = async (
-  req: express.Request,
-  res: express.Response
-) => {
+exports.addWip = async (req: express.Request, res: express.Response) => {
   try {
-    const wipCollectionId = uuidv4();
-    const post = await db.WipCollections.create({
-      wipCollectionId: wipCollectionId,
-      wipCollectionTitle: req.body.title,
-      profileId: req.body.profileId
+    const wipId = uuidv4();
+    const post = await db.Wips.create({
+      wipId: wipId,
+      wipTitle: req.body.wipTitle,
+      wipImage: req.body.wipImage,
+      uploadDate: Date.now().toString(),
+      wipCollectionId: req.body.wipCollectionId
     });
     res.send(post);
+    res.status(200);
+  } catch (e) {
+    console.log(e);
+    console.error('addWip is failing');
+    res.status(500);
+    res.end();
+  }
+}
+
+exports.addWipCollection = async (req: express.Request, res: express.Response) => {
+  try {
+    assert(req.session.profileId);
+    const wipCollectionId = uuidv4();
+    const result = await db.WipCollections.create({
+      wipCollectionId: wipCollectionId,
+      wipCollectionTitle: req.body.title,
+      profileId: req.session.profileId.toString()
+    });
+    res.send(result);
     res.status(201);
   } catch (e) {
     console.log(e);
@@ -133,10 +152,7 @@ exports.addWipCollection = async (
   }
 }
 
-exports.getWipCollection = async (
-  req: express.Request,
-  res: express.Response
-) => {
+exports.getWipCollection = async (req: express.Request, res: express.Response) => {
   try {
     const results = await db.WipCollections.findAll({
       attributes: ['wipCollectionTitle'],
@@ -162,13 +178,11 @@ exports.getWipCollection = async (
   }
 }
 
-exports.getWipCollectionByUser = async (
-  req: express.Request,
-  res: express.Response
-) => {
+exports.getWipCollectionByUser = async (req: express.Request, res: express.Response) => {
   try {
+    assert(req.session.profileId);
     const results = await db.WipCollections.findAll({
-      where: { profileId: req.body.profileId },
+      where: { profileId: req.session.profileId },
       attributes: ['wipCollectionTitle', 'profileId'],
       include: [
         {
@@ -188,32 +202,14 @@ exports.getWipCollectionByUser = async (
   }
 }
 
-exports.addWip = async (req: express.Request, res: express.Response) => {
-  try {
-    const wipId = uuidv4();
-    const post = await db.Wips.create({
-      wipId: wipId,
-      wipTitle: req.body.wipTitle,
-      wipImage: req.body.wipImage,
-      uploadDate: Date.now().toString(),
-      wipCollectionId: req.body.wipCollectionId
-    });
-    res.send(post);
-    res.status(200);
-  } catch (e) {
-    console.log(e);
-    console.error('addWip is failing');
-    res.status(500);
-    res.end();
-  }
-}
-
 exports.addFollower = async (req: express.Request, res: express.Response) => {
+  console.log(req.session);
   try {
+    assert(req.session.profileId);
     const follow = await db.Followers.create({
       followId: uuidv4(),
       profileId: req.body.followeeId,
-      followerId: req.body.profileId,
+      followerId: req.session.profileId.toString(),
     });
     res.status(200);
     res.send(follow);
@@ -226,9 +222,10 @@ exports.addFollower = async (req: express.Request, res: express.Response) => {
 }
 
 exports.getFollowers = async (req: express.Request, res: express.Response) => {
+  console.log(req.session);
   try {
     const followers = await db.Followers.findAll({
-      where: { profileId: req.body.profileId },
+      where: { profileId: req.session.profileId },
       include: [
         {
           model: db.Profile,
@@ -251,7 +248,7 @@ exports.getFollowers = async (req: express.Request, res: express.Response) => {
 exports.getFollowees = async (req: express.Request, res: express.Response) => {
   try {
     const followees = await db.Followers.findAll({
-      where: { followerId: req.body.profileId },
+      where: { followerId: req.session.profileId },
       include: [
         {
           model: db.Profile,

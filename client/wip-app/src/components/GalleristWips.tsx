@@ -65,7 +65,6 @@ function GalleristWips(): JSX.Element {
     setWips(copyWips);
     const result = await methods.addFollower(
       collection.Profile.profileId,
-      user.profileId
     );
     console.log("this is result: ", result);
   };

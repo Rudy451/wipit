@@ -5,13 +5,13 @@ const methods = require('./controllers')
 
 router.post("/register", methods.registerUser);
 router.post("/login", methods.loginUser);
-router.post("/logout", methods.logoutUser);
 router.post("/wipcollections", methods.addWipCollection);
 router.post("/wip", methods.addWip);
-router.post('/userwipcollections', methods.getWipCollectionByUser);
 router.post("/follower", methods.addFollower);
-router.post("/followers", methods.getFollowers);
-router.post("/followees", methods.getFollowees);
+router.get("/logout", methods.logoutUser);
+router.get('/userwipcollections', methods.getWipCollectionByUser);
 router.get("/wipcollections", methods.getWipCollection);
+router.get("/followers", methods.getFollowers);
+router.get("/followees", methods.getFollowees);
 
 module.exports = router

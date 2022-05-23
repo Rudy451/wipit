@@ -28,13 +28,11 @@ const methods = {
     return result.json();
   },
 
-  logOutUser: async (profileId) => {
+  logOutUser: async () => {
     const result = await fetch("http://localhost:3456/logout", {
-      method: "POST",
+      method: "GET",
+      credentials: "include",
       headers: { "Content-type": "application/json" },
-      body: JSON.stringify({
-        profileId: profileId
-      }),
     });
     return result.json();
   },
@@ -42,6 +40,7 @@ const methods = {
   createCollection: async (wipCollectionName, profileId) => {
     const result = await fetch("http://localhost:3456/wipcollections", {
       method: "POST",
+      credentials: "include",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({
         title: wipCollectionName,
@@ -54,6 +53,7 @@ const methods = {
   createWip: async (wip) => {
     const result = await fetch("http://localhost:3456/wip", {
       method: "POST",
+      credentials: "include",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({
         wipTitle: wip.wipTitle,
@@ -69,13 +69,11 @@ const methods = {
     return result.json();
   },
 
-  getWipCollectionByUser: async (profileId) => {
+  getWipCollectionByUser: async () => {
     const result = await fetch("http://localhost:3456/userwipcollections", {
-      method: "POST",
+      method: "GET",
+      credentials: "include",
       headers: { "Content-type": "application/json" },
-      body: JSON.stringify({
-        profileId: profileId,
-      }),
     });
     return result.json();
   },
@@ -83,6 +81,7 @@ const methods = {
   addWip: async (wip_title, update_request, update_request_date) => {
     const response = await fetch("http://localhost:3456/wips", {
       method: "POST",
+      credentials: "include",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({
         wip_title: wip_title,
@@ -93,58 +92,33 @@ const methods = {
     return response;
   },
 
-  addCard: async (
-    wipId,
-    img_url,
-    upload_date,
-    seen_by_state,
-    seen_by_user,
-    seen_by_date
-  ) => {
-    const response = await fetch(`http://localhost:3456/wips/${wipId}`, {
-      method: "POST",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify({
-        img_url: img_url,
-        upload_date: upload_date,
-        seen_by_state: seen_by_state,
-        seen_by_user: seen_by_user,
-        seen_by_date: seen_by_date,
-      }),
-    }).then((response) => response.json());
-    return response;
-  },
-
-  addFollower: async (followeeId, profileId) => {
+  // Fix file
+  addFollower: async (followeeId) => {
     const response = await fetch(`http://localhost:3456/follower`, {
       method: "POST",
+      credentials: "include",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({
         followeeId: followeeId,
-        profileId: profileId,
       }),
     }).then((response) => response.json());
     return response;
   },
 
-  getFollowers: async (profileId) => {
+  getFollowers: async () => {
     const response = await fetch(`http://localhost:3456/followers`, {
-      method: "POST",
+      method: "GET",
+      credentials: "include",
       headers: { "Content-type": "application/json" },
-      body: JSON.stringify({
-        profileId: profileId,
-      }),
     }).then((response) => response.json());
     return response;
   },
 
-  getFollowees: async (profileId) => {
-    const response = await fetch(`http://localhost:3456/wips/followees`, {
-      method: "POST",
+  getFollowees: async () => {
+    const response = await fetch(`http://localhost:3456/followees`, {
+      method: "GET",
+      credentials: "include",
       headers: { "Content-type": "application/json" },
-      body: JSON.stringify({
-        profileId: profileId,
-      }),
     }).then((response) => response.json());
     return response;
   }

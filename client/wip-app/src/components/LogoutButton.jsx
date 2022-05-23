@@ -1,11 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import { Button, Text } from '@chakra-ui/react';
+import methods from '../services';
 
 function LogoutButton() {
   let navigate = useNavigate();
-  const logoutRouteChange = () => {
+
+  const logoutRouteChange = async () => {
+    await methods.logOutUser();
     let path = `/`;
     navigate(path);
   };

@@ -35,14 +35,14 @@ function ArtistProfile(): JSX.Element {
       setUser(myUser)
     }
     await methods
-      .getWipCollectionByUser(user == undefined ? myUser.profileId : user.profileId)
+      .getWipCollectionByUser()
       .then((response) => {
         setWipCollection(response);
       })
       .catch((error) => {
         console.log(error);
       });
-    await methods.getFollowers(user == undefined ? myUser.profileId : user.profileId).then((response) => {
+    await methods.getFollowers().then((response) => {
       console.log(response);
       setFollowers(response.length);
     });

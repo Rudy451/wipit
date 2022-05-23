@@ -45,8 +45,8 @@ function GalleristProfile(): JSX.Element {
       myUser = await methods.getUser({"email": true, "password": true});
       setUser(myUser)
     }
-    methods.getFollowees(user == undefined ? myUser.profileId : user.profileId).then((response) => {
-      response.forEach(async(artist: any)=> artist.artistWips = await methods.getWipCollectionByUser(artist.profile.profileId));
+    methods.getFollowees().then((response) => {
+      response.forEach(async(artist: any)=> artist.artistWips = await methods.getWipCollectionByUser());
       let noDuplicates: any = uniqBy(response,'profileId');
       setFollowees(noDuplicates);
       // console.log('artistWips: ', followees[0].artistWips[0].Wips[0].wipImage);

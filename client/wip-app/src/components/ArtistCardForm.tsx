@@ -37,9 +37,7 @@ function ArtistCardForm(): JSX.Element {
       wipCollectionId: WCI,
     };
     const result = await methods.createWip(newWip);
-    const collectionResult = await methods.getWipCollectionByUser(
-      user.profileId
-    );
+    const collectionResult = await methods.getWipCollectionByUser();
     setWipCollection(collectionResult);
     console.log(result, "result object or something");
     setWip(wip === null ? [result] : wip.concat([result]));

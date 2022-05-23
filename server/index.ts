@@ -7,7 +7,6 @@ import connectRedis from 'connect-redis';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import db from './models/index';
-//import { v4 as uuidv4 } from 'uuid';
 
  declare module "express-session" {
   interface Session {
@@ -32,12 +31,14 @@ const redisClient = redis.createClient({
   }
 });
 
-redisClient.on('connect', (res:string) => {
+redisClient.on('connect', () => {
+  // Comment out during testing...
   console.log(`listening on ${host}:${redisPort}...`);
 });
 
 redisClient.on('error', (err:string) => {
-  console.log("Error occurred....:", err);
+  // Comment out during testing...
+  console.log('Error occurred....:', err);
 });
 
 const redisStore = connectRedis(session);
@@ -57,7 +58,7 @@ app.use(session({
   cookie: {
     httpOnly: true,
     secure: false,
-    maxAge: oneDay
+    maxAge: oneDay,
   },
   resave: false
 }));
@@ -72,10 +73,16 @@ app.use(router);
 async function bootstrap(){
   await redisClient.connect();
   await db.sequelize.sync()
-  app.listen(nodejsPort, () => {
+  await app.listen(nodejsPort, () => {
     console.log(`listening on ${host}:${nodejsPort}...`);
-  })
+  });
 };
 
+// Comment out during testing...
 bootstrap();
-export default redisClient;
+
+export {
+  redisClient,
+  app,
+  nodejsPort
+}
