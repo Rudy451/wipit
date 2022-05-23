@@ -3,11 +3,14 @@
   "version": "1.0.0",
   "description": "package.json for heroku deployment",
   "scripts": {
-    "postinstall": "npm install --prefix server && npm install --prefix client/wip-app && tsc",
+    "build": "tsc",
+    "postinstall": "npm install --prefix server && npm install --prefix client/wip-app && npm run build",
     "watch-ts": "tsc -w",
     "deploy": "git add -A && git commit -m Heroku && git push heroku master"
   },
-  "engines": {"node": "16.13.0"},
+  "engines": {
+    "node": "16.13.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Rudy451/wipit.git"
@@ -17,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/Rudy451/wipit/issues"
   },
-  "homepage": "https://github.com/Rudy451/wipit#readme"
+  "homepage": "https://github.com/Rudy451/wipit#readme",
+  "devDependencies": {
+    "typescript": "^4.6.4"
+  }
 }
