@@ -20,8 +20,8 @@ import db from './models/index';
 const router = require('./router');
 
 const app = express();
-const host = process.env.HOST;
-const nodejsPort = process.env.NODEJS_PORT;
+const host = process.env.HOST || "0.0.0.0";
+const nodejsPort = process.env.PORT || process.env.NODEJS_PORT;
 const redisPort = process.env.REDIS_PORT;
 const redisClient = redis.createClient({
   legacyMode: true,
