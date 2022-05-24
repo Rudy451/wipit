@@ -1,7 +1,10 @@
+require('dotenv').config({ path: `${__dirname}/../../../.env` });
+const targetURL = process.env.NODE_ENV == 'development' ? 'http://localhost:3456' : 'https://wipitapp.herokuapp.com';
+
 const methods = {
 
   createUser: async (newUser) => {
-    const result = await fetch("http://localhost:3456/register", {
+    const result = await fetch(`${targetURL}/register`, {
       method: "POST",
       headers: { "Content-type": "application/json" },
       credentials: "include",
@@ -16,7 +19,7 @@ const methods = {
   },
 
   getUser: async (user) => {
-    const result = await fetch("http://localhost:3456/login", {
+    const result = await fetch(`${targetURL}/login`, {
       method: "POST",
       headers: { "Content-type": "application/json" },
       credentials: "include",
@@ -29,7 +32,7 @@ const methods = {
   },
 
   logOutUser: async () => {
-    const result = await fetch("http://localhost:3456/logout", {
+    const result = await fetch(`${targetURL}/logout`, {
       method: "GET",
       credentials: "include",
       headers: { "Content-type": "application/json" },
@@ -38,7 +41,7 @@ const methods = {
   },
 
   createCollection: async (wipCollectionName, profileId) => {
-    const result = await fetch("http://localhost:3456/wipcollections", {
+    const result = await fetch(`${targetURL}/wipcollections`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-type": "application/json" },
@@ -51,7 +54,7 @@ const methods = {
   },
 
   createWip: async (wip) => {
-    const result = await fetch("http://localhost:3456/wip", {
+    const result = await fetch(`${targetURL}/wip`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-type": "application/json" },
@@ -65,12 +68,12 @@ const methods = {
   },
 
   getWipCollections: async () => {
-    const result = await fetch("http://localhost:3456/wipCollections");
+    const result = await fetch(`${targetURL}/wipCollections`);
     return result.json();
   },
 
   getWipCollectionByUser: async () => {
-    const result = await fetch("http://localhost:3456/userwipcollections", {
+    const result = await fetch(`${targetURL}/userwipcollections`, {
       method: "GET",
       credentials: "include",
       headers: { "Content-type": "application/json" },
@@ -79,7 +82,7 @@ const methods = {
   },
 
   addWip: async (wip_title, update_request, update_request_date) => {
-    const response = await fetch("http://localhost:3456/wips", {
+    const response = await fetch(`${targetURL}/wips`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-type": "application/json" },
@@ -94,7 +97,7 @@ const methods = {
 
   // Fix file
   addFollower: async (followeeId) => {
-    const response = await fetch(`http://localhost:3456/follower`, {
+    const response = await fetch(`${targetURL}/follower`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-type": "application/json" },
@@ -106,7 +109,7 @@ const methods = {
   },
 
   getFollowers: async () => {
-    const response = await fetch(`http://localhost:3456/followers`, {
+    const response = await fetch(`${targetURL}/followers`, {
       method: "GET",
       credentials: "include",
       headers: { "Content-type": "application/json" },
@@ -115,7 +118,7 @@ const methods = {
   },
 
   getFollowees: async () => {
-    const response = await fetch(`http://localhost:3456/followees`, {
+    const response = await fetch(`${targetURL}/followees`, {
       method: "GET",
       credentials: "include",
       headers: { "Content-type": "application/json" },

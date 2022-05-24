@@ -56,7 +56,6 @@ app.use(session({
   secret: process.env.SECRET as string,
   saveUninitialized: false,
   cookie: {
-    httpOnly: true,
     secure: false,
     maxAge: oneDay,
   },
