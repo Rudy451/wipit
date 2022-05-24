@@ -20,8 +20,8 @@ import db from './models/index';
 const router = require('./router');
 
 const app = express();
-const host = process.env.HOST || "0.0.0.0";
-const nodejsPort = process.env.PORT || process.env.NODEJS_PORT;
+const host = process.env.NODE_ENV == 'development' ? process.env.HOST || "wipitapp.herokuapp.com";
+const nodejsPort = process.env.NODE_ENV == 'development' ? process.env.NODEJS_PORT : process.env.PORT || 80 || 443;
 const redisPort = process.env.REDIS_PORT;
 const redisClient = redis.createClient({
   legacyMode: true,
