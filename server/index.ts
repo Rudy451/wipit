@@ -21,7 +21,7 @@ const router = require('./router');
 
 const app = express();
 const host = process.env.NODE_ENV == 'development' ? process.env.HOST : "wipitapp.herokuapp";
-const nodejsPort = process.env.NODE_ENV == 'development' ? process.env.NODEJS_PORT : process.env.PORT || 80 || 443;
+const nodejsPort = process.env.NODE_ENV == 'development' ? process.env.NODEJS_PORT : process.env.PORT || 80;
 const redisPort = process.env.REDIS_PORT;
 const redisClient = redis.createClient({
   legacyMode: true,
