@@ -23,13 +23,19 @@ const app = express();
 const host = process.env.NODE_ENV == 'development' ? process.env.HOST : "wipitapp.herokuapp";
 const nodejsPort = process.env.NODE_ENV == 'development' ? process.env.NODEJS_PORT : process.env.PORT || 80;
 const redisPort = process.env.REDIS_PORT;
-const redisClient = redis.createClient({
-  legacyMode: true,
-  socket: {
-    host: host,
-    port: parseInt(redisPort as string)
-  }
-});
+const redisClient = process.env.NODE_ENV == 'development' ?
+  redis.createClient({
+    legacyMode: true,
+    socket: {
+      host: host,
+      port: parseInt(redisPort as string)
+    }
+  }) :
+  redis.createClient({
+    url: process.env.REDIS_URL,
+    legacyMode: true
+  });
+
 
 redisClient.on('connect', () => {
   // Comment out during testing...
