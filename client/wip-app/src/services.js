@@ -1,5 +1,5 @@
 require('dotenv').config({ path: `${__dirname}/../../../.env` });
-const targetURL = process.env.NODE_ENV == 'development' ? 'http://localhost:3456' : `https://${process.env.HOST}:${process.env.PORT}`;
+const targetURL = 'http:localhost:3456';// process.env.NODE_ENV == 'development' ? 'http://localhost:3456' : `https://${process.env.HOST}:${process.env.PORT}`;
 
 const methods = {
 
