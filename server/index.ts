@@ -2,6 +2,7 @@ require('dotenv').config({ path: `${__dirname}/../.env` });
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
+import path from 'path';
 import * as redis from 'redis';
 import connectRedis from 'connect-redis';
 import cors from 'cors';
@@ -56,6 +57,7 @@ const corsOptions = {
   credentials: true,
 }
 
+app.use(express.static(path.join(__dirname, 'client/build')));
 app.use(cookieParser());
 app.use(session({
   store: sessionTokenStore,
