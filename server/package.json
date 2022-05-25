@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "start": "nodemon index.ts",
+    "start": "nodemon index",
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles --testTIMEOUT=10000"
   },
   "jest": {
