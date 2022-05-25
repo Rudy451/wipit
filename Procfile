@@ -1,1 +1,1 @@
-web: cd client/wip-app && npm start && cd ../../server && npm start
+web: cd server && npm start && cd ../client/wip-app && npm start
