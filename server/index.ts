@@ -21,7 +21,7 @@ const router = require('./router');
 
 const app = express();
 const host = process.env.HOST;
-const nodejsPort = process.env.NODE_ENV == 'development' ? process.env.NODEJS_PORT : process.env.PORT || 80 || 443;
+const nodejsPort = process.env.PORT || 80 || 443;
 const redisPort = process.env.REDIS_PORT;
 const redisClient = process.env.NODE_ENV == 'development' ?
   redis.createClient({
