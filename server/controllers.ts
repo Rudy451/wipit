@@ -12,19 +12,20 @@ exports.registerUser = async (req: express.Request, res: express.Response) => {
     assert(email.length > 0);
     const myUser = await db.Login.findOne({ where: { email: email } });
     assert(myUser === null);
-    assert(name.length() > 0 && name.length < 30);
-    assert(password.length() > 0 && password.length < 50);
+    assert(name.length > 0 && name.length < 30);
+    assert(password.length > 0 && password.length < 50);
     assert(type == "artist" || type == "gallerist");
     const saltRounds = 12;
     bcrypt.genSalt(saltRounds, (err, salt) => {
-      if (err) err;
-      bcrypt.hash(password, salt, async () => {
+      assert(err == undefined)
+      bcrypt.hash(password, salt, async (err, hash) => {
+        assert(err == undefined);
         const userId:any = uuidv4();
         const profileId:any = uuidv4();
         await db.Login.create({
           loginId: userId,
           email: email,
-          password: password,
+          password: hash,
           profileId:
           await db.Profile.create({
             profileId: profileId,
@@ -48,7 +49,7 @@ exports.registerUser = async (req: express.Request, res: express.Response) => {
   } catch (e) {
     console.log(e);
     console.error('failed registration');
-    res.send(undefined);
+    res.send({});
     res.status(400);
   }
 }
@@ -100,7 +101,7 @@ exports.logoutUser = async (req: express.Request, res: express.Response) => {
     req.session.destroy((err:any) => {
       if(err){
         // Comment out during testing....
-        //console.log("Error: ", err);
+        console.log("Error: ", err);
       }
     });
     res.send(true);
@@ -203,7 +204,6 @@ exports.getWipCollectionByUser = async (req: express.Request, res: express.Respo
 }
 
 exports.addFollower = async (req: express.Request, res: express.Response) => {
-  console.log(req.session);
   try {
     assert(req.session.profileId);
     const follow = await db.Followers.create({
@@ -222,7 +222,6 @@ exports.addFollower = async (req: express.Request, res: express.Response) => {
 }
 
 exports.getFollowers = async (req: express.Request, res: express.Response) => {
-  console.log(req.session);
   try {
     const followers = await db.Followers.findAll({
       where: { profileId: req.session.profileId },

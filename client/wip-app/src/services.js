@@ -1,10 +1,11 @@
-require('dotenv').config({ path: `${__dirname}/../../../.env` });
-const targetURL = 'http:localhost:3456';// process.env.NODE_ENV == 'development' ? 'http://localhost:3456' : `https://${process.env.HOST}:${process.env.PORT}`;
+const API_URL = process.env.REACT_APP_API_URL;
+
+console.log(API_URL)
 
 const methods = {
 
   createUser: async (newUser) => {
-    const result = await fetch(`${targetURL}/register`, {
+    const result = await fetch(`${API_URL}/register`, {
       method: "POST",
       headers: { "Content-type": "application/json" },
       credentials: "include",
@@ -19,7 +20,7 @@ const methods = {
   },
 
   getUser: async (user) => {
-    const result = await fetch(`${targetURL}/login`, {
+    const result = await fetch(`${API_URL}/login`, {
       method: "POST",
       headers: { "Content-type": "application/json" },
       credentials: "include",
@@ -32,7 +33,7 @@ const methods = {
   },
 
   logOutUser: async () => {
-    const result = await fetch(`${targetURL}/logout`, {
+    const result = await fetch(`${API_URL}/logout`, {
       method: "GET",
       credentials: "include",
       headers: { "Content-type": "application/json" },
@@ -41,7 +42,7 @@ const methods = {
   },
 
   createCollection: async (wipCollectionName, profileId) => {
-    const result = await fetch(`${targetURL}/wipcollections`, {
+    const result = await fetch(`${API_URL}/wipcollections`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-type": "application/json" },
@@ -54,7 +55,7 @@ const methods = {
   },
 
   createWip: async (wip) => {
-    const result = await fetch(`${targetURL}/wip`, {
+    const result = await fetch(`${API_URL}/wip`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-type": "application/json" },
@@ -68,12 +69,12 @@ const methods = {
   },
 
   getWipCollections: async () => {
-    const result = await fetch(`${targetURL}/wipCollections`);
+    const result = await fetch(`${API_URL}/wipCollections`);
     return result.json();
   },
 
   getWipCollectionByUser: async () => {
-    const result = await fetch(`${targetURL}/userwipcollections`, {
+    const result = await fetch(`${API_URL}/userwipcollections`, {
       method: "GET",
       credentials: "include",
       headers: { "Content-type": "application/json" },
@@ -82,7 +83,7 @@ const methods = {
   },
 
   addWip: async (wip_title, update_request, update_request_date) => {
-    const response = await fetch(`${targetURL}/wips`, {
+    const response = await fetch(`${API_URL}/wips`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-type": "application/json" },
@@ -97,7 +98,7 @@ const methods = {
 
   // Fix file
   addFollower: async (followeeId) => {
-    const response = await fetch(`${targetURL}/follower`, {
+    const response = await fetch(`${API_URL}/follower`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-type": "application/json" },
@@ -109,7 +110,7 @@ const methods = {
   },
 
   getFollowers: async () => {
-    const response = await fetch(`${targetURL}/followers`, {
+    const response = await fetch(`${API_URL}/followers`, {
       method: "GET",
       credentials: "include",
       headers: { "Content-type": "application/json" },
@@ -118,7 +119,7 @@ const methods = {
   },
 
   getFollowees: async () => {
-    const response = await fetch(`${targetURL}/followees`, {
+    const response = await fetch(`${API_URL}/followees`, {
       method: "GET",
       credentials: "include",
       headers: { "Content-type": "application/json" },
