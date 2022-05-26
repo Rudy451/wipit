@@ -13,5 +13,6 @@ router.get('/userwipcollections', methods.getWipCollectionByUser);
 router.get("/wipcollections", methods.getWipCollection);
 router.get("/followers", methods.getFollowers);
 router.get("/followees", methods.getFollowees);
+router.get('/*', methods.misc);
 
 module.exports = router

@@ -37,6 +37,7 @@ function ArtistProfile(): JSX.Element {
     await methods
       .getWipCollectionByUser()
       .then((response) => {
+        console.log(response);
         setWipCollection(response);
       })
       .catch((error) => {

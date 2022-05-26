@@ -3,8 +3,13 @@ import { v4 as uuidv4 } from 'uuid';
 import bcrypt, { genSaltSync } from 'bcrypt';
 import assert from 'assert';
 import { Sequelize } from '@sequelize/core';
+import path from 'path';
 
 import db from './models/index';
+
+exports.misc = (req: express.Request, res: express.Response) => {
+  res.sendFile(path.join(__dirname, '../client/wip-app/build', 'index.html'))
+}
 
 exports.registerUser = async (req: express.Request, res: express.Response) => {
   try {

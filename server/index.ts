@@ -8,6 +8,7 @@ import connectRedis from 'connect-redis';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import db from './models/index';
+import { rmSync } from 'fs';
 
  declare module "express-session" {
   interface Session {
@@ -57,7 +58,7 @@ const corsOptions = {
   credentials: true,
 }
 
-app.use(express.static(path.join(__dirname, 'client/build')));
+app.use(express.static(path.join(__dirname, '../client/wip-app/build')));
 app.use(cookieParser());
 app.use(session({
   store: sessionTokenStore,
