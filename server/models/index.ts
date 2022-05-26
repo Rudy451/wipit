@@ -6,6 +6,7 @@ import WipCollections from "./wipcollections";
 import Wips from "./wips";
 import Followers from "./followers";
 
+// Foreign keys for table joins in controllers.ts file
 Login.belongsTo(Profile, { foreignKey: "profileId" });
 Profile.hasOne(Login, { foreignKey: "profileId" });
 WipCollections.belongsTo(Profile, { foreignKey: "profileId" });

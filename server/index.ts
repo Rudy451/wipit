@@ -10,7 +10,8 @@ import bodyParser from 'body-parser';
 import db from './models/index';
 import { rmSync } from 'fs';
 
- declare module "express-session" {
+// Add user properties to cached session for testing in tests/test.ts
+declare module "express-session" {
   interface Session {
     profileId?: {[key:string]: any},
     email?: {[key:string]: any},
@@ -33,6 +34,7 @@ const redisClient = process.env.NODE_ENV == 'development' ?
       port: parseInt(redisPort as string)
     }
   }) :
+  // Grab Redis URL from Heroku Redis
   redis.createClient({
     url: process.env.REDIS_URL,
     legacyMode: true
@@ -49,17 +51,22 @@ redisClient.on('error', (err:string) => {
   console.log('Error occurred....:', err);
 });
 
+// Redis store for caching session data
 const redisStore = connectRedis(session);
 const sessionTokenStore = new redisStore({client: redisClient});
 
+// Session can last up to one day
 const oneDay = 1000 * 60 * 60 * 24;
+// Allows us to pass cookies containing session data (connect.sid)
 const corsOptions = {
   origin: true,
   credentials: true,
 }
 
+// Serving React files server side for Heroku deployment
 app.use(express.static(path.join(__dirname, '../client/wip-app/build')));
 app.use(cookieParser());
+// Session data stored in Redis Client
 app.use(session({
   store: sessionTokenStore,
   secret: process.env.SECRET as string,
@@ -78,6 +85,7 @@ app.use(bodyParser.json());
 app.use(express.json());
 app.use(router);
 
+// Connect Redis Client, Database & Express Server
 async function bootstrap(){
   await redisClient.connect();
   await db.sequelize.sync()
@@ -89,6 +97,7 @@ async function bootstrap(){
 // Comment out during testing...
 bootstrap();
 
+// Export Express Server/Data & Redis Client for testing
 export {
   redisClient,
   app,

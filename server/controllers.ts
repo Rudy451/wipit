@@ -8,18 +8,21 @@ import path from 'path';
 import db from './models/index';
 
 exports.misc = (req: express.Request, res: express.Response) => {
+  // Send static react files to browser
   res.sendFile(path.join(__dirname, '../client/wip-app/build', 'index.html'))
 }
 
 exports.registerUser = async (req: express.Request, res: express.Response) => {
   try {
     const { name, email, password, type } = req.body;
+    // Request body sanitation check
     assert(email.length > 0);
     const myUser = await db.Login.findOne({ where: { email: email } });
     assert(myUser === null);
     assert(name.length > 0 && name.length < 30);
     assert(password.length > 0 && password.length < 50);
     assert(type == "artist" || type == "gallerist");
+    // Encrypt password using bcrypt library for security reasons
     const saltRounds = 12;
     bcrypt.genSalt(saltRounds, (err, salt) => {
       assert(err == undefined)
@@ -27,6 +30,7 @@ exports.registerUser = async (req: express.Request, res: express.Response) => {
         assert(err == undefined);
         const userId:any = uuidv4();
         const profileId:any = uuidv4();
+        // Post nested object to Login & Profile tables respectively
         await db.Login.create({
           loginId: userId,
           email: email,
@@ -38,6 +42,7 @@ exports.registerUser = async (req: express.Request, res: express.Response) => {
             type: type
           }).then(result => result.profileId),
         });
+        // Attach relevant user data for session for caching purposes
         req.session.profileId = profileId;
         req.session.email = email;
         req.session.name = name;
@@ -61,8 +66,10 @@ exports.registerUser = async (req: express.Request, res: express.Response) => {
 
 exports.loginUser = async (req: express.Request, res: express.Response) => {
   try {
+    // If user hasn't logged into site send query to database
     if(req.session.email == undefined) {
       const { email, password } = req.body;
+      // Pull releant data from query for assignment to active session
       const result:any = await db.Login.findOne({
         where: { email: email},
         include: [
@@ -79,6 +86,7 @@ exports.loginUser = async (req: express.Request, res: express.Response) => {
           [Sequelize.col('Profile.type'), 'type']
         ]
       });
+      // Query sanitation check for result & password match
       assert(result !== null);
       assert(bcrypt.compareSync(password, result["password"]));
       req.session.profileId = result.dataValues["profileId"];
@@ -103,6 +111,7 @@ exports.loginUser = async (req: express.Request, res: express.Response) => {
 
 exports.logoutUser = async (req: express.Request, res: express.Response) => {
   try {
+    // Useless because we get new session anyway but good for optics
     req.session.destroy((err:any) => {
       if(err){
         // Comment out during testing....
@@ -141,6 +150,7 @@ exports.addWip = async (req: express.Request, res: express.Response) => {
 
 exports.addWipCollection = async (req: express.Request, res: express.Response) => {
   try {
+    // Confirm user is signed in
     assert(req.session.profileId);
     const wipCollectionId = uuidv4();
     const result = await db.WipCollections.create({
@@ -186,6 +196,7 @@ exports.getWipCollection = async (req: express.Request, res: express.Response) =
 
 exports.getWipCollectionByUser = async (req: express.Request, res: express.Response) => {
   try {
+    // Confirm user is logged in
     assert(req.session.profileId);
     const results = await db.WipCollections.findAll({
       where: { profileId: req.session.profileId },

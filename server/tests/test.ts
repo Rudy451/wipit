@@ -6,16 +6,20 @@ import { v4 as uuidv4 } from 'uuid';
 
 let server:any;
 let superTestRequest:any;
+// used for caching
 let cookie:any;
+// Test database for write request testing
 const db = newDb();
 
 beforeAll(async () => {
+  // Connect to server & redis store
   await redisClient.connect();
   server = app.listen(nodejsPort, () => {});
   superTestRequest = supertest(server);
 });
 
 afterAll(async () => {
+  // Disconect from server & redis store
   await server.close();
   await redisClient.quit();
   redisClient.disconnect();
@@ -23,14 +27,18 @@ afterAll(async () => {
 
 describe("POST API Calls", () => {
 
+  // Used to restore db instance
   let backup:any;
 
   beforeAll(() => {
+    // Populate database with postgres data via sql file
     db.public.none(fs.readFileSync('./tests/Wips.sql', 'utf-8'));
+    // Assign backup
     backup = db.backup();
   });
 
   afterEach(() => {
+    // restore backup
     backup.restore();
   })
 
@@ -69,6 +77,7 @@ describe("POST API Calls", () => {
 describe("GET API Calls", () => {
 
   beforeEach(async () => {
+    // Login user for caching purposes (tests rely on this)
     await superTestRequest.post('/login').send({'email': 'dgreenleaf@greenleaf.org', 'password': 'password'}).then((result:any) => cookie = result.header['set-cookie'].pop().split(';')[0]);
   });
 
@@ -187,6 +196,7 @@ describe("GET API Calls", () => {
 
 describe("Separate API Testing for Followees", () => {
   beforeEach(async () => {
+    // Different testing given data
     await superTestRequest.post('/login').send({'email': 'freddie@greenleaf.org', 'password': 'password3'}).then((result:any) => cookie = result.header['set-cookie'].pop().split(';')[0]);
   });
 
