@@ -40,25 +40,24 @@ function GalleristProfile(): JSX.Element {
   const { user, setUser } = useContext(UserContext);
   let myUser = {"profileId": true, "email": true, "password": true, "name": true};
 
-  const apiCall = async () => {
-    if(user == undefined) {
-      myUser = await methods.getUser({"email": true, "password": true});
-      setUser(myUser)
-    }
-    methods.getFollowees().then((response) => {
-      response.forEach(async(artist: any)=> artist.artistWips = await methods.getWipCollectionByUser());
-      let noDuplicates: any = uniqBy(response,'profileId');
-      setFollowees(noDuplicates);
-      // console.log('artistWips: ', followees[0].artistWips[0].Wips[0].wipImage);
-      console.log(followees);
-      return response;
-    }).catch((error) => {
-      console.log(error);
-      console.log('Error occured.');
-    });
-  };
-
   useEffect(() => {
+    const apiCall = async () => {
+      if(user == undefined) {
+        myUser = await methods.getUser({"email": true, "password": true});
+        setUser(myUser)
+      }
+      methods.getFollowees().then((response) => {
+        response.forEach(async(artist: any)=> artist.artistWips = await methods.getWipCollectionByUser());
+        let noDuplicates: any = uniqBy(response,'profileId');
+        setFollowees(noDuplicates);
+        // console.log('artistWips: ', followees[0].artistWips[0].Wips[0].wipImage);
+        console.log(followees);
+        return response;
+      }).catch((error) => {
+        console.log(error);
+        console.log('Error occured.');
+      });
+    };
     apiCall();
   }, []);
 

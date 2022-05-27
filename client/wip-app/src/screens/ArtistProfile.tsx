@@ -29,27 +29,26 @@ function ArtistProfile(): JSX.Element {
 
   let myUser = {"profileId": true, "email": true, "password": true, "name": true};
 
-  const apiCall = async () => {
-    if(user == undefined) {
-      myUser = await methods.getUser({"email": true, "password": true});
-      setUser(myUser)
-    }
-    await methods
-      .getWipCollectionByUser()
-      .then((response) => {
-        console.log(response);
-        setWipCollection(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    await methods.getFollowers().then((response) => {
-      console.log(response);
-      setFollowers(response.length);
-    });
-  };
-
   useEffect(() => {
+    const apiCall = async () => {
+      if(user == undefined) {
+        myUser = await methods.getUser({"email": true, "password": true});
+        setUser(myUser)
+      }
+      await methods
+        .getWipCollectionByUser()
+        .then((response) => {
+          console.log(response);
+          setWipCollection(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      await methods.getFollowers().then((response) => {
+        console.log(response);
+        setFollowers(response.length);
+      });
+    };
     apiCall();
   }, []);
 
